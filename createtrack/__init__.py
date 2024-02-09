@@ -35,9 +35,11 @@ class CreateTrack:
         inner_point = []
         outer_point = []
         for i in range(len(points)):
-            p1 = calculate_custom_point(points[i], points[(i+1) % len(points)], 0.1)
+            rand_perc = np.random.uniform(0.1, 0.4)
+            p1 = calculate_custom_point(points[i], points[(i+1) % len(points)], rand_perc)
             inner_point.append(p1)
-            p2 = calculate_custom_point(points[i], points[(i+1) % len(points)], 0.9)
+            rand_perc = np.random.uniform(0.6, 0.9)
+            p2 = calculate_custom_point(points[i], points[(i+1) % len(points)], rand_perc)
             outer_point.append(p2)
         inner_point = np.array(inner_point)
         outer_point = np.array(outer_point)
@@ -67,14 +69,14 @@ class CreateTrack:
         
 
         center = np.mean(points, axis=0)
-
+        
         index = np.random.randint(0, len(points)-2)
         point = get_mid_points(points[index], points[(index+1) % len(points)])
 
-        scale_factor = np.random.uniform(0.5, 1)
+        scale_factor = np.random.uniform(1, 0.1)
         displaced = center[0] + scale_factor * (point[0] - center[0]), center[1] + scale_factor * (point[1] - center[1])
 
-        points = np.insert(points, index-1, displaced, 0)
+        points = np.insert(points, index+1, displaced, 0)
 
         return points
 

@@ -1,8 +1,5 @@
-import numpy as np
-from scipy.spatial import ConvexHull
-import math
 import pygame
-
+import numpy as np
 import createtrack
 
 def calculate_point_section(p1, p2, per):
@@ -13,12 +10,18 @@ def calculate_point_section(p1, p2, per):
 
 
 if __name__ == "__main__":
-    track = createtrack.CreateTrack(10,[50,900], [50,900],10)
+    seed = np.random.randint(0, 2**32)
+    np.random.seed(seed)
+
+    track = createtrack.CreateTrack(10,[50,1900], [50,1900],10)
     points = track.create_racetrack()
 
     pygame.init()
-    screen = pygame.display.set_mode((1000, 1000))
+    screen = pygame.display.set_mode((2000, 2000))
     clock = pygame.time.Clock()
+    pygame.display.set_caption("Racetrack")
+
+    font = pygame.font.Font(None, 36)  
     running = True
     while running:
         for event in pygame.event.get():
@@ -27,7 +30,10 @@ if __name__ == "__main__":
 
         screen.fill("black")
 
-        pygame.draw.lines(screen, pygame.Color("white"), False, points, 20)
+        pygame.draw.aalines(screen, pygame.Color("white"), False, points)
+
+        text_surface = font.render("Seed: {}".format(seed), True, (255, 255, 255))
+        screen.blit(text_surface, (10, 10))
 
         pygame.display.flip()
         clock.tick(60)
