@@ -1,4 +1,4 @@
-import pygame
+import pyray as pr
 import numpy as np
 import createtrack
 
@@ -13,29 +13,41 @@ if __name__ == "__main__":
     seed = np.random.randint(0, 2**32)
     np.random.seed(seed)
 
-    track = createtrack.CreateTrack(10,[50,1900], [50,1900],10)
-    points = track.create_racetrack()
+    track = createtrack.CreateTrack(10,[0,100], [0,100],15,seed)
+    points = track.create_racetrack(1)
 
-    pygame.init()
-    screen = pygame.display.set_mode((2000, 2000))
-    clock = pygame.time.Clock()
-    pygame.display.set_caption("Racetrack")
 
-    font = pygame.font.Font(None, 36)  
-    running = True
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
+    print(points)
 
-        screen.fill("black")
+    if 1==0:
+        pr.init_window(2000, 2000, "Hello Pyray")
+        pr.set_target_fps(60)
+        cam = pr.Camera2D((0, 0), (0, 0), 0, 20)
 
-        pygame.draw.aalines(screen, pygame.Color("white"), False, points)
+        while not pr.window_should_close():
+            pr.begin_drawing()
+            pr.clear_background(pr.BLACK)
+            pr.draw_text("Seed: {}".format(seed), 10, 10, 20, pr.RAYWHITE)
+            pr.begin_mode_2d(cam)
+            for i in range(len(points)-1):
+                pr.draw_line_ex(list(points[i]), list(points[i+1]),1, pr.RAYWHITE)
+            pr.end_mode_2d(cam)
+            pr.end_drawing()
+        pr.close_window()        
+    else:
+        pr.init_window(2000, 2000, "Racetrack")
+        pr.set_target_fps(60)
+        cam = pr.Camera3D([0, 40, 100], [50.0, 0.0, 50.0], [0.0, 1.0, 0.0], 90.0, 0)
 
-        text_surface = font.render("Seed: {}".format(seed), True, (255, 255, 255))
-        screen.blit(text_surface, (10, 10))
-
-        pygame.display.flip()
-        clock.tick(60)
-
-    pygame.quit()
+        while not pr.window_should_close():
+            pr.update_camera(cam, pr.CAMERA_ORBITAL)
+            pr.begin_drawing()
+            pr.clear_background(pr.BLACK)
+            pr.draw_text("Seed: {}".format(seed), 10, 10, 20, pr.RAYWHITE)
+            pr.begin_mode_3d(cam)
+            pr.draw_grid(500, 3.0)
+            for i in range(len(points)-1):
+                pr.draw_cylinder_ex(list(points[i]), list(points[i+1]), 1, 1, 6, pr.RED)
+            pr.end_mode_3d(cam)
+            pr.end_drawing()
+        pr.close_window()  
