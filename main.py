@@ -1,6 +1,7 @@
 import pyray as pr
 import numpy as np
 import createtrack
+import argparse
 
 def calculate_point_section(p1, p2, per):
     x_three_quarters = (per * p1[0] + p2[0]) / 10
@@ -10,19 +11,25 @@ def calculate_point_section(p1, p2, per):
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='Generate a procedurally generated racetrack')
+    parser.add_argument('--track_3D', type=bool, default=False, help='Create 3D racetrack or not')
+    parser.add_argument('--seed', type=int, help='Specificy int32 seed')
+    parser.add_argument('--screen_x', type=int, default=100, help='The screen width for raylib')
+    parser.add_argument('--screen_y', type=int, default=100, help='The screen height for raylib')
+    args = parser.parse_args()
+
     seed = np.random.randint(0, 2**32)
+    if args.seed:
+        seed = args.seed
     np.random.seed(seed)
 
-    track = createtrack.CreateTrack(10,[0,100], [0,100],15,seed)
-    points = track.create_racetrack(1)
+    track = createtrack.CreateTrack(num_points=10, x_bounds=[0,100], y_bounds=[0,100], corner_cells=15,seed=seed)
+    points = track.create_racetrack(args.track_3D)
 
-
-    print(points)
-
-    if 1==0:
-        pr.init_window(2000, 2000, "Hello Pyray")
+    if args.track_3D == False :
+        pr.init_window(args.screen_x, args.screen_y, "Racetrack")
         pr.set_target_fps(60)
-        cam = pr.Camera2D((0, 0), (0, 0), 0, 20)
+        cam = pr.Camera2D((0, 0), (0, 0), 0, 2)
 
         while not pr.window_should_close():
             pr.begin_drawing()
@@ -35,7 +42,7 @@ if __name__ == "__main__":
             pr.end_drawing()
         pr.close_window()        
     else:
-        pr.init_window(2000, 2000, "Racetrack")
+        pr.init_window(args.screen_x, args.screen_y, "Racetrack")
         pr.set_target_fps(60)
         cam = pr.Camera3D([0, 40, 100], [50.0, 0.0, 50.0], [0.0, 1.0, 0.0], 90.0, 0)
 

@@ -82,7 +82,7 @@ class CreateTrack:
 
         return points
 
-    def create_racetrack(self, track_3d: int = 0):
+    def create_racetrack(self, track_3d: bool = False):
         self.height_map = self.generate_noise(octaves=1, seed=self.seed)
         x_values = np.random.uniform(self.x_bounds[0], self.x_bounds[1], self.num_points)
         y_values = np.random.uniform(self.y_bounds[0],  self.y_bounds[1], self.num_points)
@@ -93,7 +93,7 @@ class CreateTrack:
         hull_verts = self.random_midpoint(points=hull_verts)
         curves = self.curve_corners(hull_verts)
 
-        if track_3d == 1:
+        if track_3d == True:
             points_3d = []
             for i in range(len(curves)):
                 x = int(curves[i][0])
