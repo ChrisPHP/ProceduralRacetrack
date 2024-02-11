@@ -1,7 +1,9 @@
 import pyray as pr
 import numpy as np
-import createtrack
 import argparse
+
+import createtrack
+import createmodel
 
 def calculate_point_section(p1, p2, per):
     x_three_quarters = (per * p1[0] + p2[0]) / 10
@@ -42,6 +44,9 @@ if __name__ == "__main__":
             pr.end_drawing()
         pr.close_window()        
     else:
+        vista = createmodel.CreateModel()
+        vista.create_mesh_line(points=points)
+
         pr.init_window(args.screen_x, args.screen_y, "Racetrack")
         pr.set_target_fps(60)
         cam = pr.Camera3D([0, 40, 100], [50.0, 0.0, 50.0], [0.0, 1.0, 0.0], 90.0, 0)

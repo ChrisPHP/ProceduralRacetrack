@@ -83,7 +83,7 @@ class CreateTrack:
         return points
 
     def create_racetrack(self, track_3d: bool = False):
-        self.height_map = self.generate_noise(octaves=1, seed=self.seed)
+        self.height_map = self.generate_noise(octaves=2, seed=self.seed)
         x_values = np.random.uniform(self.x_bounds[0], self.x_bounds[1], self.num_points)
         y_values = np.random.uniform(self.y_bounds[0],  self.y_bounds[1], self.num_points)
         points = np.column_stack((x_values, y_values)) 
